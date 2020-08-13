@@ -1,0 +1,21 @@
+Bootstrap:docker
+From:ubuntu:18.04
+
+
+%runscript
+	
+	python3.6 /opt/HistoQC/qc_pipeline.py "$@"
+
+%post
+    export DEBIAN_FRONTEND=noninteractive
+    apt-get update
+    apt-get -y install git python3-pip python3.6 openslide-tools python3-tk
+    cd /opt
+    git clone https://github.com/choosehappy/HistoQC.git
+    cd HistoQC
+    git checkout a1c03e1e32215e2f68766c310ccf50263946cae9
+    pip3 install -r /opt/HistoQC/requirements.txt
+
+
+%test
+	python3.6 /opt/HistoQC/qc_pipeline.py --help
