@@ -1,5 +1,7 @@
 import openslide
 from PIL import Image
+import numpy as np
+from tifffile import *
 
 def apply_mask(original):
     slide = openslide.OpenSlide(original)
@@ -8,7 +10,9 @@ def apply_mask(original):
     masked = Image.new(mode="RGB", size=slide.dimensions, color=(255,255,255))
     slide_pixels = slide.read_region((0,0), 0, slide.dimensions)
     masked.paste(slide_pixels,(0,0),mask)
-    masked.save(original+"_masked.png","PNG", optimize=True)
+    np_masked = np.asarray(masked)
+    with TiffWriter(original+"_masked.tif", bigtiff=True) as tif:
+        tif.save(np_masked, compress=6)
 
 
 
