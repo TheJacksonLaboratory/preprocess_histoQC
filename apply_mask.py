@@ -6,7 +6,7 @@ from tifffile import *
 def apply_mask(original, outdir):
     slide = openslide.OpenSlide(original)
     filename = original.split("/")[-1]
-    mask = Image.open(outdir+"/"+filename +"_mask_use.png")
+    mask = Image.open(outdir+"/"+filename +"/" + filename + "_mask_use.png")
     mask = mask.resize((slide.dimensions[0], slide.dimensions[1]))
     masked = Image.new(mode="RGB", size=slide.dimensions, color=(255,255,255))
     slide_pixels = slide.read_region((0,0), 0, slide.dimensions)
