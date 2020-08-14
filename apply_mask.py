@@ -41,7 +41,7 @@ if __name__ == "__main__":
         parser.print_help(sys.stderr)
         sys.exit(1)
     args = parser.parse_args()
-    print("input pattern:" + args.input_pattern)
+    print(args.input_pattern)
     print("outdir:" + args.outdir)
     basepath = args.basepath  #
     basepath = basepath + os.sep if len(
