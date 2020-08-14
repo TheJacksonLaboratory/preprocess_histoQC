@@ -5,7 +5,8 @@ from tifffile import *
 
 def apply_mask(original, outdir):
     slide = openslide.OpenSlide(original)
-    mask = Image.open(original+"_mask_use.png")
+    filename = original.split("/")[-1]
+    mask = Image.open(outdir+"/"+filename + "/" +"_mask_use.png")
     mask = mask.resize((slide.dimensions[0], slide.dimensions[1]))
     masked = Image.new(mode="RGB", size=slide.dimensions, color=(255,255,255))
     slide_pixels = slide.read_region((0,0), 0, slide.dimensions)
@@ -13,6 +14,10 @@ def apply_mask(original, outdir):
     np_masked = np.asarray(masked)
     with TiffWriter(original+"_masked.tif", bigtiff=True) as tif:
         tif.save(np_masked, compress=6)
+    slide.close()
+    mask.close()
+    masked.close()
+    slide_pixels.close()
 
 
 
@@ -25,7 +30,7 @@ if __name__ == "__main__":
     parser.add_argument('input_pattern',
                         help="input filename pattern (try: *.svs or target_path/*.svs ), or tsv file containing list of files to analyze",
                         nargs="*")
-    parser.add_argument('-o', '--outdir', help="outputdir, default ./histoqc_output", default="./histoqc_output_DATE_TIME", type=str)
+    parser.add_argument('-o', '--outdir', help="outputdir, default ./histoqc_output", default="./histoqc_output_DATE_TIME", type=str, required=True)
     parser.add_argument('-p', '--basepath',
                         help="base path to add to file names, helps when producing data using existing output file as input",
                         default="", type=str)
@@ -41,8 +46,6 @@ if __name__ == "__main__":
         parser.print_help(sys.stderr)
         sys.exit(1)
     args = parser.parse_args()
-    print(args.input_pattern)
-    print("outdir:" + args.outdir)
     basepath = args.basepath  #
     basepath = basepath + os.sep if len(
         basepath) > 0 else ""  # if the user supplied a different basepath, make sure it ends with an os.sep
@@ -63,5 +66,4 @@ if __name__ == "__main__":
     # now do analysis of files
     for filei, fname in enumerate(files):
         fname = os.path.realpath(fname)
-        print(filei, fname)
-        #apply_mask(fname, args.outdir)
+        apply_mask(fname, args.outdir)
