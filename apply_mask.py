@@ -58,7 +58,6 @@ if __name__ == "__main__":
     else:  # user sent us a wildcard, need to use glob to find files
         files = glob.glob(args.basepath + args.input_pattern[0])
 
-    logging.info(f"Number of files detected by pattern:\t{len(files)}")
 
     # now do analysis of files
     for filei, fname in enumerate(files):
