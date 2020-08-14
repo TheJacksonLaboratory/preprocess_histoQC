@@ -12,7 +12,7 @@ def apply_mask(original, outdir):
     slide_pixels = slide.read_region((0,0), 0, slide.dimensions)
     masked.paste(slide_pixels,(0,0),mask)
     np_masked = np.asarray(masked)
-    with TiffWriter(original+"_masked.tif", bigtiff=True) as tif:
+    with TiffWriter(outdir+"/"+filename + "/" +"_masked.tif", bigtiff=True) as tif:
         tif.save(np_masked, compress=6)
     slide.close()
     mask.close()
