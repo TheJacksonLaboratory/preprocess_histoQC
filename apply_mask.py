@@ -41,7 +41,8 @@ if __name__ == "__main__":
         parser.print_help(sys.stderr)
         sys.exit(1)
     args = parser.parse_args()
-
+    print("input pattern:" + args.input_pattern)
+    print("outdir:" + args.outdir)
     basepath = args.basepath  #
     basepath = basepath + os.sep if len(
         basepath) > 0 else ""  # if the user supplied a different basepath, make sure it ends with an os.sep
@@ -57,7 +58,7 @@ if __name__ == "__main__":
                 files.append(basepath + line.strip().split("\t")[0])
     else:  # user sent us a wildcard, need to use glob to find files
         files = glob.glob(args.basepath + args.input_pattern[0])
-
+    print(files)
 
     # now do analysis of files
     for filei, fname in enumerate(files):
